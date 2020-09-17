@@ -18,10 +18,17 @@ io.on('connection', (socket) => {
     score: 0
   }
   //creating instance of connected user
+
   socket.on('getUsername',data => {
-    dataUser[socket.id].username=data
+    dataUser[socket.id].username = data
   })
   //set the username of instance user
+
+  socket.on('getScore',data =>{
+    dataUser[socket.id].score =  data
+  })
+  //listening getScore action from client to get scoring
+
   socket.on('disconnect',(socket) => {
     console.log(`${dataUser[socket.id].username} has been disconnected`)
     delete dataUser[socket.id]
