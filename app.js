@@ -8,16 +8,18 @@ app.use(cors());
 const wordGenerator = require('./helpers/wordgen.js');
 //tinggal panggil wordGenerator()
 //returning array of 10 random words
-
-let dataUser = [];
-
+let dataUser = {};
+//v-for {{},{},{}} data in datas // data.score
 io.on('connection', (socket) => {
   console.log('a user connected')
-  socket.on('clientMessage', (data) => {
-    console.log(data)
+  dataUser[socket.id] = {
+    id: socket.id,
+    username: '',
+    score: 0
+  }
+  io.on('disconnect',(socket) => {
+    delete dataUser[socket.id]
   })
-  io.emit('someoneConnect', 'seseorang terhubung')
-  io.emit('hai', 'ini server')
 })
 
 http.listen(PORT, () => {
