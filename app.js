@@ -17,11 +17,16 @@ io.on('connection', (socket) => {
     username: '',
     score: 0
   }
+  //creating instance of connected user
+  socket.on('getUsername',data => {
+    dataUser[socket.id].username=data
+  })
+  //set the username of instance user
   io.on('disconnect',(socket) => {
     delete dataUser[socket.id]
   })
+  // deleting user when disconnected
 })
-
 http.listen(PORT, () => {
   console.log(`server at port ${PORT}`)
 })
