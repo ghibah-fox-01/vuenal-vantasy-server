@@ -22,11 +22,22 @@ io.on('connection', (socket) => {
     dataUser[socket.id].username=data
   })
   //set the username of instance user
-  io.on('disconnect',(socket) => {
+  socket.on('disconnect',(socket) => {
+    console.log(`${dataUser[socket.id].username} has been disconnected`)
     delete dataUser[socket.id]
+    // io.emit('disconnect', socket.id);
+    //request to client for delete this player
   })
   // deleting user when disconnected
 })
 http.listen(PORT, () => {
   console.log(`server at port ${PORT}`)
 })
+
+
+// socket.on('disconnect', function () {
+//   console.log('user disconnected: ', socket.id);
+//   delete players[socket.id];
+//   // emit a message to all players to remove this player
+//   io.emit('disconnect', socket.id);
+// });
