@@ -19,7 +19,10 @@ io.on('connection', (socket) => {
   }
   //creating instance of connected user
   socket.on('getUsername',data => {
-    dataUser[socket.id].username=data
+    dataUser[socket.id].username = data
+  })
+  socket.on('getScore',data =>{
+    dataUser[socket.id].score =  data
   })
   //set the username of instance user
   socket.on('disconnect',(socket) => {
