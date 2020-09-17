@@ -5,6 +5,10 @@ const PORT = process.env.PORT || 3000;
 const cors = require('cors');
 app.use(cors());
 
+const wordGenerator = require('./helpers/wordgen.js');
+//tinggal panggil wordGenerator()
+//returning array of 10 random words
+
 let dataUser = [];
 
 io.on('connection', (socket) => {
