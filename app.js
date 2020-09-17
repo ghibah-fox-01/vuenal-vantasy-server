@@ -12,6 +12,9 @@ let dataUser = {};
 //v-for {{},{},{}} data in datas // data.score
 io.on('connection', (socket) => {
   console.log('a user connected')
+
+  io.emit('loadingWords', wordGenerator())
+
   dataUser[socket.id] = {
     id: socket.id,
     username: '',
@@ -25,8 +28,8 @@ io.on('connection', (socket) => {
   socket.on('disconnect',(socket) => {
     console.log(`${dataUser[socket.id].username} has been disconnected`)
     delete dataUser[socket.id]
-    // io.emit('disconnect', socket.id);
-    //request to client for delete this player
+    io.emit('disconnect', socket.id);
+    // request to client for delete this player
   })
   // deleting user when disconnected
 })
@@ -35,9 +38,9 @@ http.listen(PORT, () => {
 })
 
 
-// socket.on('disconnect', function () {
-//   console.log('user disconnected: ', socket.id);
-//   delete players[socket.id];
-//   // emit a message to all players to remove this player
-//   io.emit('disconnect', socket.id);
-// });
+socket.on('disconnect', function () {
+  console.log('user disconnected: ', socket.id);
+  delete players[socket.id];
+  // emit a message to all players to remove this player
+  io.emit('disconnect', socket.id);
+});
