@@ -18,7 +18,7 @@ io.on('connection', (socket) => {
     username: '',
     score: 0
   }
-  console.log(dataUser)
+  socket.emit('GET_DATA_USER', dataUser)
 
   //creating instance of connected user
   socket.emit('GET_LIST_QUESTION' , wordGenerator())
@@ -26,13 +26,15 @@ io.on('connection', (socket) => {
   socket.on('newUser', data => {
     dataUser[socket.id].username = data.username
     socket.emit('GET_DATA_USER', dataUser)
-    console.log(dataUser)
+
   })
   //set the username of instance user
 
   socket.on('getScore',data =>{
+    
     dataUser[socket.id].score =  data
     console.log(dataUser)
+    socket.emit('GET_DATA_USER', dataUser)
   })
   //listening getScore action from client to get scoring
 
@@ -43,7 +45,8 @@ io.on('connection', (socket) => {
     delete dataUser[socket.id]
     // io.emit('disconnect', socket.id);
     //request to client for delete this player
-    
+  })
+
   id = socket.id
   console.log(`${dataUser[`${id}`].id} has joinned`)
   //creating instance of connected user
@@ -71,6 +74,7 @@ io.on('connection', (socket) => {
   })
   // deleting user when disconnected
 })
+
 http.listen(PORT, () => {
   console.log(`server at port ${PORT}`)
 })
@@ -81,4 +85,4 @@ http.listen(PORT, () => {
 //   delete players[socket.id];
 //   // emit a message to all players to remove this player
 //   io.emit('disconnect', socket.id);
-// });
+// })
