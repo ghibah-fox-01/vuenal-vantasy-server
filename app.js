@@ -9,8 +9,8 @@ const wordGenerator = require('./helpers/wordgen.js');
 //tinggal panggil wordGenerator()
 //returning array of 10 random words
 let dataUser = {};
-let id;
 //v-for {{},{},{}} data in datas // data.score
+let id;
 io.on('connection', (socket) => {
   id = socket.id
   console.log('a user connected')
@@ -19,23 +19,22 @@ io.on('connection', (socket) => {
     username: '',
     score: 0
   }
-  socket.emit('GET_DATA_USER', dataUser)
+  socket.emit('GET_DATA_USER', {dataUser, id})
 
   //creating instance of connected user
-  socket.emit('GET_LIST_QUESTION' , wordGenerator())
+  socket.emit('GET_LIST_QUESTION', wordGenerator())
 
   socket.on('newUser', data => {
     dataUser[socket.id].username = data.username
-    socket.emit('GET_DATA_USER', dataUser)
-
+    socket.emit('GET_DATA_USER', {dataUser, id})
   })
   //set the username of instance user
 
-  socket.on('getScore',data =>{
+  socket.on('getScore', data => {
     console.log('------------------')
-    dataUser[socket.id].score =  data
+    dataUser[socket.id].score = data
     console.log(dataUser)
-    socket.emit('GET_DATA_USER', dataUser,id)
+    socket.emit('GET_DATA_USER', {dataUser, id})
   })
   // socket.on('endOfGame', data => {
   //   dataUser = {}
@@ -43,17 +42,10 @@ io.on('connection', (socket) => {
   // })
   //listening getScore action from client to get scoring
 
-  socket.on('disconnect',(socket) => {
-    console.log('disconnected event')
-    console.log(socket)
-    console.log(socket.id)
-    console.log(`${socket.id} has been disconnected`)
-    delete dataUser[socket.id]
-    // io.emit('disconnect', socket.id);
-    //request to client for delete this player
+  socket.on('disconnect', () => {
+    socket.disconnect(true);
   })
 
-  id = socket.id
   console.log(`${dataUser[`${id}`].id} has joinned`)
   //creating instance of connected user
   // console.log(dataUser[socket.id])
