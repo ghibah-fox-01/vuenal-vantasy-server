@@ -11,12 +11,12 @@ let id;
 io.on('connection', (socket) => {
   id = socket.id
   console.log('a user connected')
-  
+
   io.emit('GET_LIST_QUESTION', wordGenerator())
 
 
   socket.emit('GET_LIST_QUESTION', wordGenerator())
-  
+
   socket.on('newUser', data => {
     dataUsers.push({
       id: id,
@@ -26,7 +26,7 @@ io.on('connection', (socket) => {
     console.log(dataUsers)
     io.emit('GET_DATA_USER', dataUsers)
   })
-  
+
   socket.on('foundWinner', (data)=>{
     let winnerName
     dataUsers.forEach((elem)=>{
@@ -37,7 +37,7 @@ io.on('connection', (socket) => {
     dataUsers = [];
     io.emit('WINNER_USERNAME', winnerName)
   })
-  
+
   socket.on('incrementScore', data => {
     dataUsers.forEach((elem)=>{
       if(elem.name===data){
@@ -46,6 +46,9 @@ io.on('connection', (socket) => {
     console.log(dataUsers)
       io.emit('GET_DATA_USER', dataUsers)
     })
+  })
+  socket.on('disconnect',() => {
+
   })
 })
 
