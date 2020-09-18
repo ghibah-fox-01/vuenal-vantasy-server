@@ -1,7 +1,7 @@
 const app = require('express')();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3002;
 const cors = require('cors');
 app.use(cors());
 
@@ -11,26 +11,33 @@ const wordGenerator = require('./helpers/wordgen.js');
 let dataUser = {};
 //v-for {{},{},{}} data in datas // data.score
 io.on('connection', (socket) => {
-  console.log('a user connected')
+  console.log(socket.id + ' a user connected')
   dataUser[socket.id] = {
     id: socket.id,
     username: '',
     score: 0
   }
+  console.log(dataUser)
   //creating instance of connected user
+  socket.emit('GET_LIST_QUESTION' , wordGenerator())
 
-  socket.on('getUsername',data => {
-    dataUser[socket.id].username = data
+  socket.on('newUser', data => {
+    dataUser[socket.id].username = data.username
+    socket.emit('GET_DATA_USER', dataUser)
+    console.log(dataUser)
   })
   //set the username of instance user
 
   socket.on('getScore',data =>{
     dataUser[socket.id].score =  data
+    console.log(dataUser)
   })
   //listening getScore action from client to get scoring
 
   socket.on('disconnect',(socket) => {
-    console.log(`${dataUser[socket.id].username} has been disconnected`)
+    console.log(socket)
+    console.log(socket.id)
+    console.log(`${socket.id} has been disconnected`)
     delete dataUser[socket.id]
     // io.emit('disconnect', socket.id);
     //request to client for delete this player
