@@ -1,7 +1,7 @@
 const app = require('express')();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3002;
 const cors = require('cors');
 app.use(cors());
 
@@ -19,6 +19,31 @@ io.on('connection', (socket) => {
     score: 0
   }
   console.log(dataUser)
+
+  //creating instance of connected user
+  socket.emit('GET_LIST_QUESTION' , wordGenerator())
+
+  socket.on('newUser', data => {
+    dataUser[socket.id].username = data.username
+    socket.emit('GET_DATA_USER', dataUser)
+    console.log(dataUser)
+  })
+  //set the username of instance user
+
+  socket.on('getScore',data =>{
+    dataUser[socket.id].score =  data
+    console.log(dataUser)
+  })
+  //listening getScore action from client to get scoring
+
+  socket.on('disconnect',(socket) => {
+    console.log(socket)
+    console.log(socket.id)
+    console.log(`${socket.id} has been disconnected`)
+    delete dataUser[socket.id]
+    // io.emit('disconnect', socket.id);
+    //request to client for delete this player
+    
   id = socket.id
   console.log(`${dataUser[`${id}`].id} has joinned`)
   //creating instance of connected user
@@ -42,6 +67,7 @@ io.on('connection', (socket) => {
     delete dataUser[`${id}`]
     console.log('user tersisa')
     console.log(dataUser)
+
   })
   // deleting user when disconnected
 })
