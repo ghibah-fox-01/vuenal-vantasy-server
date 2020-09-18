@@ -6,10 +6,7 @@ const cors = require('cors');
 app.use(cors());
 
 const wordGenerator = require('./helpers/wordgen.js');
-//tinggal panggil wordGenerator()
-//returning array of 10 random words
 let dataUsers = [];
-//v-for {{},{},{}} data in datas // data.score
 let id;
 io.on('connection', (socket) => {
   id = socket.id
@@ -30,8 +27,17 @@ io.on('connection', (socket) => {
     io.emit('GET_DATA_USER', dataUsers)
   })
   
-  //set the username of instance user
-
+  socket.on('foundWinner', (data)=>{
+    let winnerName
+    dataUsers.forEach((elem)=>{
+      if(elem.name === data){
+        winnerName = elem.name;
+      }
+    })
+    dataUsers = [];
+    io.emit('WINNER_USERNAME', winnerName)
+  })
+  
   socket.on('incrementScore', data => {
     dataUsers.forEach((elem)=>{
       if(elem.name===data){
