@@ -19,14 +19,18 @@ io.on('connection', (socket) => {
     username: '',
     score: 0
   }
-  socket.emit('GET_DATA_USER', {dataUser, id})
+  // socket.emit('GET_DATA_USER', {dataUser, id})
+  io.emit('GET_DATA_USER', {dataUser, id})
 
   //creating instance of connected user
-  socket.emit('GET_LIST_QUESTION', wordGenerator())
+  // socket.emit('GET_LIST_QUESTION', wordGenerator())
 
+  socket.emit('GET_LIST_QUESTION', wordGenerator())
+  
   socket.on('newUser', data => {
     dataUser[socket.id].username = data.username
-    socket.emit('GET_DATA_USER', {dataUser, id})
+    // socket.emit('GET_DATA_USER', {dataUser, id})
+    io.emit('GET_DATA_USER', {dataUser, id})
   })
   //set the username of instance user
 
@@ -34,7 +38,8 @@ io.on('connection', (socket) => {
     console.log('------------------')
     dataUser[socket.id].score = data
     console.log(dataUser)
-    socket.emit('GET_DATA_USER', {dataUser, id})
+    // socket.emit('GET_DATA_USER', {dataUser, id})
+    io.emit('GET_DATA_USER', {dataUser, id})
   })
   // socket.on('endOfGame', data => {
   //   dataUser = {}
