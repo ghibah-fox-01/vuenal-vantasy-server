@@ -9,15 +9,17 @@ const wordGenerator = require('./helpers/wordgen.js');
 //tinggal panggil wordGenerator()
 //returning array of 10 random words
 let dataUser = {};
+let id;
 //v-for {{},{},{}} data in datas // data.score
 io.on('connection', (socket) => {
-  console.log(socket.id + ' a user connected')
-  dataUser[socket.id] = {
+  console.log('a user connected')
+  dataUser[`${socket.id}`] = {
     id: socket.id,
     username: '',
     score: 0
   }
   console.log(dataUser)
+
   //creating instance of connected user
   socket.emit('GET_LIST_QUESTION' , wordGenerator())
 
@@ -41,6 +43,31 @@ io.on('connection', (socket) => {
     delete dataUser[socket.id]
     // io.emit('disconnect', socket.id);
     //request to client for delete this player
+    
+  id = socket.id
+  console.log(`${dataUser[`${id}`].id} has joinned`)
+  //creating instance of connected user
+  // console.log(dataUser[socket.id])
+  // socket.on('getUsername', data => {
+  //   dataUser[socket.id].username = data
+  // })
+  //set the username of instance user
+
+  // socket.on('getScore',data =>{
+  //   dataUser[socket.id].score =  data
+  // })
+  //listening getScore action from client to get scoring
+
+  // socket.on('returnFinalData', data => {
+  //   dataUser
+  // })
+  socket.on('disconnect',socket => {
+    // console.log(dataUser[`${id}`].id)
+    console.log(`${dataUser[`${id}`].id} has been disconnected`)
+    delete dataUser[`${id}`]
+    console.log('user tersisa')
+    console.log(dataUser)
+
   })
   // deleting user when disconnected
 })
