@@ -17,6 +17,9 @@ io.on('connection', (socket) => {
   
   io.emit('GET_LIST_QUESTION', wordGenerator())
 
+
+  socket.emit('GET_LIST_QUESTION', wordGenerator())
+  
   socket.on('newUser', data => {
     dataUsers.push({
       id: id,
@@ -26,6 +29,7 @@ io.on('connection', (socket) => {
     console.log(dataUsers)
     io.emit('GET_DATA_USER', dataUsers)
   })
+  
   //set the username of instance user
 
   socket.on('incrementScore', data => {
@@ -42,11 +46,3 @@ io.on('connection', (socket) => {
 http.listen(PORT, () => {
   console.log(`server at port ${PORT}`)
 })
-
-
-// socket.on('disconnect', function () {
-//   console.log('user disconnected: ', socket.id);
-//   delete players[socket.id];
-//   // emit a message to all players to remove this player
-//   io.emit('disconnect', socket.id);
-// })
