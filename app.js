@@ -12,6 +12,7 @@ let dataUser = {};
 let id;
 //v-for {{},{},{}} data in datas // data.score
 io.on('connection', (socket) => {
+  id = socket.id
   console.log('a user connected')
   dataUser[`${socket.id}`] = {
     id: socket.id,
@@ -31,11 +32,15 @@ io.on('connection', (socket) => {
   //set the username of instance user
 
   socket.on('getScore',data =>{
-
+    console.log('------------------')
     dataUser[socket.id].score =  data
     console.log(dataUser)
-    socket.emit('GET_DATA_USER', dataUser)
+    socket.emit('GET_DATA_USER', dataUser,id)
   })
+  // socket.on('endOfGame', data => {
+  //   dataUser = {}
+  //   socket.emit('GET_DATA_USER',dataUser)
+  // })
   //listening getScore action from client to get scoring
 
   socket.on('disconnect',(socket) => {
